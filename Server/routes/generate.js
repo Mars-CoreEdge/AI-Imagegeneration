@@ -18,10 +18,23 @@ router.post('/', async (req, res) => {
     const { prompt } = req.body
     if (!prompt) return res.status(400).json({ error: 'prompt required' })
 
-    // Using OpenAI Images API
-    const result = await openai.images.generate({ model: 'gpt-image-1', prompt, size: '1024x1024' })
-    const b64 = result.data[0].b64_json
-    const dataUrl = `data:image/png;base64,${b64}`
+    let dataUrl
+    // Fast path: Hugging Face FLUX.1-schnell if available
+    if (process.env.HF_TOKEN) {
+      const r = await fetch('https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${process.env.HF_TOKEN}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ inputs: prompt, options: { wait_for_model: true } }),
+      })
+      if (!r.ok) throw new Error('HF generation failed')
+      const buf = Buffer.from(await r.arrayBuffer())
+      dataUrl = `data:image/png;base64,${buf.toString('base64')}`
+    } else {
+      // Fallback: OpenAI
+      const result = await openai.images.generate({ model: 'gpt-image-1', prompt, size: '1024x1024' })
+      const b64 = result.data[0].b64_json
+      dataUrl = `data:image/png;base64,${b64}`
+    }
 
     const upload = await cloudinary.uploader.upload(dataUrl, { folder: 'aiimages' })
     res.json({ url: upload.secure_url, publicId: upload.public_id })
