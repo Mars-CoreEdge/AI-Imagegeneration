@@ -40,23 +40,23 @@ function CreatePost() {
     <main className="mx-auto max-w-7xl px-4 pb-12">
       <div className="grid gap-8 py-8 lg:grid-cols-2">
         <section>
-          <h1 className="mb-2 text-3xl font-extrabold">Generate Image with prompt</h1>
-          <p className="mb-6 text-sm text-slate-400">Write your prompt according to the image you want to generate!</p>
+          <h1 className="mb-2 text-3xl font-extrabold text-left">Generate Image with prompt</h1>
+          <p className="mb-6 text-sm text-slate-400 text-left">Write your prompt according to the image you want to generate!</p>
 
           <div className="space-y-4">
-            <div>
+            <div className="text-left">
               <label className="mb-1 block text-sm text-slate-300">Author</label>
               <input value={author} onChange={(e) => setAuthor(e.target.value)} placeholder="Enter your name.." className="w-full rounded-xl border border-slate-800 bg-slate-900 px-3 py-2 outline-none placeholder:text-slate-500" />
             </div>
 
-            <div>
+            <div className="text-left">
               <label className="mb-1 block text-sm text-slate-300">Image Prompt</label>
               <textarea value={prompt} onChange={(e) => setPrompt(e.target.value)} rows={8} placeholder="Describe the image you want..." className="w-full resize-none rounded-xl border border-slate-800 bg-slate-900 px-3 py-2 outline-none placeholder:text-slate-500" />
             </div>
 
             <p className="text-xs text-slate-500">** You can post the AI Generated Image to the Community **</p>
 
-            <div className="flex gap-3">
+            <div className="flex items-center justify-center gap-3">
               <button onClick={onGenerate} disabled={loadingGen} aria-busy={loadingGen} className="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-500 disabled:opacity-60">
                 {loadingGen && <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-transparent"></span>}
                 <span>{loadingGen ? 'Generating...' : 'Generate Image'}</span>
