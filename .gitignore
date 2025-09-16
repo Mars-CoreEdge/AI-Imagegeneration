@@ -1,0 +1,41 @@
+# --- Dependencies ---
+node_modules/
+**/node_modules/
+
+# --- Environment files (secrets) ---
+.env
+.env.*
+Server/.env
+Client/.env
+!*.env.example
+!**/*.env.example
+
+# --- Build outputs ---
+Client/dist/
+Client/.vite/
+Server/dist/
+
+# --- Logs & caches ---
+logs/
+*.log
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.eslintcache
+
+# --- OS & editor files ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+!.vscode/extensions.json
+
+# --- Misc ---
+coverage/
+*.sw?
+*.suo
+*.njsproj
+*.sln
+*.ntvs*
+
+

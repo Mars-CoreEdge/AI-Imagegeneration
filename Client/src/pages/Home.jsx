@@ -1,51 +1,19 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Gallery from '../components/Gallery'
+import { listPosts } from '../lib/api'
 
 function Home() {
   const [searchText, setSearchText] = useState('')
 
-  // Placeholder data for now
-  const images = useMemo(
-    () => [
-      {
-        id: '1',
-        url: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=800&auto=format&fit=crop',
-        prompt: 'A modern bridge captured at dusk',
-        author: 'Rishav',
-      },
-      {
-        id: '2',
-        url: 'https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=800&auto=format&fit=crop',
-        prompt: 'A long empty road towards the horizon',
-        author: 'Alex',
-      },
-      {
-        id: '3',
-        url: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=800&auto=format&fit=crop',
-        prompt: 'A hand holding a phone recording the scene',
-        author: 'Sam',
-      },
-      {
-        id: '4',
-        url: 'https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=800&auto=format&fit=crop',
-        prompt: 'Minimalist architecture and lines',
-        author: 'Taylor',
-      },
-      {
-        id: '5',
-        url: 'https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?q=80&w=800&auto=format&fit=crop',
-        prompt: 'The blue hour cityscape',
-        author: 'Jordan',
-      },
-      {
-        id: '6',
-        url: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=800&auto=format&fit=crop',
-        prompt: 'Perspective shot near a bridge',
-        author: 'Rishav',
-      },
-    ],
-    []
-  )
+  const [images, setImages] = useState([])
+  useEffect(() => {
+    listPosts()
+      .then((data) => {
+        const mapped = data.map((p) => ({ id: p._id, url: p.imageUrl, prompt: p.prompt, author: p.author }))
+        setImages(mapped)
+      })
+      .catch(() => {})
+  }, [])
 
   const filtered = useMemo(() => {
     const q = searchText.toLowerCase().trim()
