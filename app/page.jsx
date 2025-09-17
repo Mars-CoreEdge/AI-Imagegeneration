@@ -23,6 +23,10 @@ export default function HomePage() {
     return images.filter((i) => i.prompt.toLowerCase().includes(q) || i.author.toLowerCase().includes(q))
   }, [images, searchText])
 
+  const handleDelete = (deletedId) => {
+    setImages(prev => prev.filter(img => img.id !== deletedId))
+  }
+
   return (
     <>
       <Navbar />
@@ -42,7 +46,7 @@ export default function HomePage() {
             />
           </div>
         </header>
-        <Gallery items={filtered} />
+        <Gallery items={filtered} onDelete={handleDelete} />
       </main>
     </>
   )
