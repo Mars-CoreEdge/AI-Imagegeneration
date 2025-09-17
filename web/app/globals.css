@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  background-color: #0b1220; /* slate-950 approximation */
+  color: #e5e7eb; /* slate-200 */
+}
+
+
