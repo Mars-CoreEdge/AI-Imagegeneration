@@ -1,13 +1,26 @@
 import OpenAI from 'openai'
 import { v2 as cloudinary } from 'cloudinary'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+// Initialize OpenAI only when needed to avoid build-time errors
+function getOpenAI() {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY environment variable is not set')
+  }
+  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+}
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-})
+// Initialize Cloudinary only when needed
+function getCloudinary() {
+  if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+    throw new Error('Cloudinary environment variables are not set')
+  }
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  })
+  return cloudinary
+}
 
 export async function POST(request) {
   try {
@@ -16,6 +29,10 @@ export async function POST(request) {
 
     let dataUrl
     
+    // Initialize services
+    const openai = getOpenAI()
+    const cloudinary = getCloudinary()
+
     // PRIMARY: DALL-E 3 (Most Accurate & High Quality)
     try {
       const result = await openai.images.generate({ 

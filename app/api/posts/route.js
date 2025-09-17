@@ -2,11 +2,18 @@ import { v2 as cloudinary } from 'cloudinary'
 import { connectToDatabase } from '../../../lib/db'
 import Post from '../../../models/Post'
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-})
+// Initialize Cloudinary only when needed
+function getCloudinary() {
+  if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+    throw new Error('Cloudinary environment variables are not set')
+  }
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  })
+  return cloudinary
+}
 
 export async function GET() {
   try {
@@ -31,6 +38,7 @@ export async function POST(request) {
     let imageUrl = image
     let publicId
     if (image.startsWith('data:')) {
+      const cloudinary = getCloudinary()
       const upload = await cloudinary.uploader.upload(image, { folder: 'aiimages' })
       imageUrl = upload.secure_url
       publicId = upload.public_id
