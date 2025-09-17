@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  server:
+    build: ./Server
+    container_name: aiimage-server
+    env_file: ./Server/.env
+    ports: ["8080:8080"]
+    restart: unless-stopped
+    networks: [aiimage-net]
+  client:
+    build: ./Client
+    container_name: aiimage-client
+    ports: ["3000:80"]
+    depends_on: [server]
+    restart: unless-stopped
+    networks: [aiimage-net]
+networks:
+  aiimage-net:
+    driver: bridge
