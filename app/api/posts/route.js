@@ -9,9 +9,17 @@ cloudinary.config({
 })
 
 export async function GET() {
-  await connectToDatabase()
-  const posts = await Post.find().sort({ createdAt: -1 }).lean()
-  return Response.json(posts)
+  try {
+    await connectToDatabase()
+  } catch (e) {
+    return new Response(JSON.stringify({ error: 'db_connect_failed', message: e.message }), { status: 500 })
+  }
+  try {
+    const posts = await Post.find().sort({ createdAt: -1 }).lean()
+    return Response.json(posts)
+  } catch (e) {
+    return new Response(JSON.stringify({ error: 'db_query_failed', message: e.message }), { status: 500 })
+  }
 }
 
 export async function POST(request) {
@@ -32,6 +40,6 @@ export async function POST(request) {
     return new Response(JSON.stringify(post), { status: 201 })
   } catch (e) {
     console.error(e)
-    return new Response(JSON.stringify({ error: 'failed to create post' }), { status: 500 })
+    return new Response(JSON.stringify({ error: 'failed_to_create_post', message: e.message }), { status: 500 })
   }
 }
