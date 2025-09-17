@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   aiimage-dev:
     build:
@@ -14,12 +12,6 @@ services:
       - /app/.next
     environment:
       - NODE_ENV=development
-      - MONGO_URI=${MONGO_URI}
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
-      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
-      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
-      - HF_TOKEN=${HF_TOKEN}
     env_file:
       - .env.local
     command: npm run dev
