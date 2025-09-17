@@ -57,13 +57,56 @@ HF_TOKEN=your-huggingface-token (optional)
 3. Add environment variables in Vercel dashboard
 4. Deploy!
 
+### Docker Deployment
+
+#### Production (Recommended)
+```bash
+# Build and run with Docker Compose
+docker-compose up -d
+
+# Or build and run manually
+docker build -t aiimage-next .
+docker run -p 3000:3000 --env-file .env.local aiimage-next
+```
+
+#### Development
+```bash
+# Run development server with hot reload
+docker-compose -f docker-compose.dev.yml up
+
+# Or build and run development manually
+docker build -f Dockerfile.dev -t aiimage-next-dev .
+docker run -p 3000:3000 -v $(pwd):/app aiimage-next-dev
+```
+
+#### Docker Commands
+```bash
+# Build production image
+docker build -t aiimage-next .
+
+# Run production container
+docker run -p 3000:3000 --env-file .env.local aiimage-next
+
+# Build development image
+docker build -f Dockerfile.dev -t aiimage-next-dev .
+
+# Stop all containers
+docker-compose down
+
+# View logs
+docker-compose logs -f aiimage-app
+```
+
 ### Other Platforms
 
-This app can be deployed to any platform that supports Next.js:
+This app can be deployed to any platform that supports Next.js or Docker:
 - Netlify
 - Railway
 - Render
 - AWS Amplify
+- DigitalOcean App Platform
+- Google Cloud Run
+- AWS ECS/Fargate
 
 ## API Endpoints
 

@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  aiimage-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: aiimage-next-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+      - MONGO_URI=${MONGO_URI}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+      - HF_TOKEN=${HF_TOKEN}
+    env_file:
+      - .env.local
+    command: npm run dev
+    networks:
+      - aiimage-dev-network
+
+networks:
+  aiimage-dev-network:
+    driver: bridge
